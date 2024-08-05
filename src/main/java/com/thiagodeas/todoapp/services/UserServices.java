@@ -1,7 +1,6 @@
 package com.thiagodeas.todoapp.services;
 
 import com.thiagodeas.todoapp.models.User;
-import com.thiagodeas.todoapp.repositories.TaskRepository;
 import com.thiagodeas.todoapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,6 @@ public class UserServices {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
 
     public User findById(Long id) {
         Optional<User> user = this.userRepository.findById(id);
