@@ -2,6 +2,7 @@ package com.thiagodeas.todoapp.controllers;
 
 import com.thiagodeas.todoapp.models.Task;
 import com.thiagodeas.todoapp.services.TaskServices;
+import com.thiagodeas.todoapp.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,9 @@ public class TaskController {
     @Autowired
     private TaskServices taskServices;
 
+    @Autowired
+    private UserServices userServices;
+
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id){
         Task obj = this.taskServices.findById(id);
@@ -28,6 +32,7 @@ public class TaskController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){
+        userServices.findById(userId);
         List<Task> objs = this.taskServices.findAllByUserId(userId);
         return ResponseEntity.ok().body(objs);
     }
