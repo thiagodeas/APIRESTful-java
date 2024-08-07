@@ -2,6 +2,8 @@ package com.thiagodeas.todoapp.services;
 
 import com.thiagodeas.todoapp.models.User;
 import com.thiagodeas.todoapp.repositories.UserRepository;
+import com.thiagodeas.todoapp.services.exceptions.DataBindingViolation;
+import com.thiagodeas.todoapp.services.exceptions.ObjectNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,7 @@ public class UserServices {
 
     public User findById(Long id) {
         Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(() -> new RuntimeException(
+        return user.orElseThrow(() -> new ObjectNotFound(
                 "Usuário não encontrado! Id: " + id + ", Tipo: " + User.class.getName()
         ));
     }
@@ -40,7 +42,7 @@ public class UserServices {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir pois há entidades relacionadas!");
+            throw new DataBindingViolation("Não é possível excluir pois há entidades relacionadas!");
         }
     }
 }
