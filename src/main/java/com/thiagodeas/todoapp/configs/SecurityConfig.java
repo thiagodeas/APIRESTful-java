@@ -1,6 +1,7 @@
 package com.thiagodeas.todoapp.configs;
 
 import com.thiagodeas.todoapp.security.JWTAuthenticationFilter;
+import com.thiagodeas.todoapp.security.JWTAuthorizationFilter;
 import com.thiagodeas.todoapp.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -51,7 +52,7 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = http
                 .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-                        .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(new BCryptPasswordEncoder());
         this.authenticationManager = authenticationManagerBuilder.build();
 
         http.authorizeRequests()
@@ -60,6 +61,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated().and().authenticationManager(authenticationManager);
 
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, jwtUtil,
+                this.userDetailsService));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
