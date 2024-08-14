@@ -3,6 +3,7 @@ package com.thiagodeas.todoapp.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thiagodeas.todoapp.exceptions.GlobalExceptionHandler;
 import com.thiagodeas.todoapp.models.User;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -54,7 +56,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws IOException,
             ServletException {
         UserSpringSecurity userSpringSecurity =
-                ((UserSpringSecurity) authentication.getPrincipal());
+                (UserSpringSecurity) authentication.getPrincipal();
         String username = userSpringSecurity.getUsername();
         String token = this.jwtUtil.generateToken(username);
         response.addHeader("Authorization", "Bearer " + token);

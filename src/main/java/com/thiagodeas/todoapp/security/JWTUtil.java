@@ -3,10 +3,12 @@ package com.thiagodeas.todoapp.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,7 +23,8 @@ public class JWTUtil {
 
     public String generateToken(String username) {
         SecretKey key = getKeyBySecret();
-        return Jwts.builder().setSubject(username)
+        return Jwts.builder()
+                .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
                 .signWith(key)
                 .compact();
@@ -38,8 +41,8 @@ public class JWTUtil {
             String username = claims.getSubject();
             Date expirationDate = claims.getExpiration();
             Date now = new Date(System.currentTimeMillis());
-            return Objects.nonNull(username) && Objects.nonNull(expirationDate)
-                    && now.before(expirationDate);
+            if (Objects.nonNull(username) && Objects.nonNull(expirationDate) && now.before(expirationDate))
+                return true;
         }
         return false;
     }

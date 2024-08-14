@@ -3,6 +3,7 @@ package com.thiagodeas.todoapp.services;
 import com.thiagodeas.todoapp.models.User;
 import com.thiagodeas.todoapp.repositories.UserRepository;
 import com.thiagodeas.todoapp.security.UserSpringSecurity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,4 +26,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new UserSpringSecurity(user.getId(), user.getUsername(), user.getPassword(),
                 user.getProfiles());
     }
+
 }

@@ -1,15 +1,16 @@
 package com.thiagodeas.todoapp.exceptions;
 
-import com.thiagodeas.todoapp.services.exceptions.DataBindingViolation;
-import com.thiagodeas.todoapp.services.exceptions.ObjectNotFound;
+import com.thiagodeas.todoapp.services.exceptions.AuthorizationException;
+import com.thiagodeas.todoapp.services.exceptions.DataBindingViolationException;
+import com.thiagodeas.todoapp.services.exceptions.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.validation.FieldError;
@@ -92,10 +93,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
                 request);
     }
 
-    @ExceptionHandler(ObjectNotFound.class)
+    @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleObjectNotFound(
-            ObjectNotFound objectNotFound,
+            ObjectNotFoundException objectNotFound,
             WebRequest request) {
         log.error("Failed to find the requested element", objectNotFound);
         return buildErrorResponse(
@@ -104,15 +105,48 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
                 request);
     }
 
-    @ExceptionHandler(DataBindingViolation.class)
+    @ExceptionHandler(DataBindingViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleDataBindingViolation(
-            DataBindingViolation dataBindingViolation,
+            DataBindingViolationException dataBindingViolation,
             WebRequest request) {
         log.error("Failed to save entity with associated data", dataBindingViolation);
         return buildErrorResponse(
                 dataBindingViolation,
                 HttpStatus.CONFLICT,
+                request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Object> handleAuthenticationException(
+            AuthenticationException authenticationException,
+            WebRequest request) {
+        log.error("Authentication error ", authenticationException);
+        return buildErrorResponse(authenticationException, HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<Object> handleAccessDeniedException(
+            AccessDeniedException accessDeniedException,
+            WebRequest request) {
+        log.error("Authorization error ", accessDeniedException);
+        return buildErrorResponse(
+                accessDeniedException,
+                HttpStatus.FORBIDDEN,
+                request);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<Object> handleAuthorizationException(
+            AuthorizationException authorizationException,
+            WebRequest request) {
+        log.error("Authorization error ", authorizationException);
+        return buildErrorResponse(
+                authorizationException,
+                HttpStatus.FORBIDDEN,
                 request);
     }
 
@@ -140,7 +174,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
                                         HttpServletResponse response,
                                         AuthenticationException exception)
             throws IOException, ServletException {
-        Integer status = HttpStatus.UNAUTHORIZED.value();
+        int status = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(status);
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse(status,
