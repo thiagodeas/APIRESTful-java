@@ -2,7 +2,7 @@ package com.thiagodeas.todoapp.controllers;
 
 import com.thiagodeas.todoapp.models.Task;
 import com.thiagodeas.todoapp.services.TaskServices;
-import com.thiagodeas.todoapp.services.UserServices;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
 
@@ -21,19 +22,15 @@ public class TaskController {
     @Autowired
     private TaskServices taskServices;
 
-    @Autowired
-    private UserServices userServices;
-
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findById(@PathVariable Long id){
+    public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task obj = this.taskServices.findById(id);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok(obj);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){
-        this.userServices.findById(userId);
-        List<Task> objs = this.taskServices.findAllByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<Task>> findAllByUser(){
+        List<Task> objs = this.taskServices.findAllByUser();
         return ResponseEntity.ok().body(objs);
     }
 
