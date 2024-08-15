@@ -7,6 +7,7 @@ import com.thiagodeas.todoapp.security.UserSpringSecurity;
 import com.thiagodeas.todoapp.services.exceptions.AuthorizationException;
 import com.thiagodeas.todoapp.services.exceptions.DataBindingViolationException;
 import com.thiagodeas.todoapp.services.exceptions.ObjectNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

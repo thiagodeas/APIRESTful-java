@@ -3,6 +3,7 @@ package com.thiagodeas.todoapp.configs;
 import com.thiagodeas.todoapp.security.JWTAuthenticationFilter;
 import com.thiagodeas.todoapp.security.JWTAuthorizationFilter;
 import com.thiagodeas.todoapp.security.JWTUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,22 +53,24 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = http
                 .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(bCryptPasswordEncoder());
         this.authenticationManager = authenticationManagerBuilder.build();
 
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated().and().authenticationManager(authenticationManager);
+                .anyRequest().authenticated().and()
+                .authenticationManager(authenticationManager);
 
-        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, jwtUtil));
-        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, jwtUtil,
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil,
                 this.userDetailsService));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

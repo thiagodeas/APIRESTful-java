@@ -19,11 +19,6 @@ public class ErrorResponse {
     private String stackTrace;
     private List<ValidationError> errors;
 
-    public String toJson() {
-        return "{\"status\": " + getStatus() + ", " +
-                "\"message\": \"" + getMessage() + "\"}";
-    }
-
     @Getter
     @Setter
     @RequiredArgsConstructor
@@ -32,10 +27,16 @@ public class ErrorResponse {
         private final String message;
     }
 
-    public void addValidationError(String field, String message){
+    public void addValidationError(String field, String message) {
         if (Objects.isNull(errors)) {
             this.errors = new ArrayList<>();
         }
         this.errors.add(new ValidationError(field, message));
     }
+
+    public String toJson() {
+        return "{\"status\": " + getStatus() + ", " +
+                "\"message\": \"" + getMessage() + "\"}";
+    }
+
 }
