@@ -1,6 +1,8 @@
 package com.thiagodeas.todoapp.services;
 
 import com.thiagodeas.todoapp.models.User;
+import com.thiagodeas.todoapp.models.dto.UserCreateDTO;
+import com.thiagodeas.todoapp.models.dto.UserUpdateDTO;
 import com.thiagodeas.todoapp.models.enums.ProfileEnum;
 import com.thiagodeas.todoapp.repositories.UserRepository;
 import com.thiagodeas.todoapp.security.UserSpringSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,5 +76,20 @@ public class UserServices {
         } catch(Exception e) {
             return null;
         }
+    }
+
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 }

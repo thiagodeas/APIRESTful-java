@@ -1,6 +1,8 @@
 package com.thiagodeas.todoapp.controllers;
 
 import com.thiagodeas.todoapp.models.User;
+import com.thiagodeas.todoapp.models.dto.UserCreateDTO;
+import com.thiagodeas.todoapp.models.dto.UserUpdateDTO;
 import com.thiagodeas.todoapp.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,24 +29,25 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(User.CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj){
-        this.userServices.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj) {
+        User user = this.userServices.fromDTO(obj);
+        User newUser = this.userServices.create(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(obj.getId()).toUri();
+                .buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(User.UpdateUser.class)
-    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id){
+    public ResponseEntity<Void> update(@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id)
+    {
         obj.setId(id);
-        this.userServices.update(obj);
+        User user = this.userServices.fromDTO(obj);
+        this.userServices.update(user);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.userServices.delete(id);
         return ResponseEntity.noContent().build();
     }

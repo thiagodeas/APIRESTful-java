@@ -1,6 +1,7 @@
 package com.thiagodeas.todoapp.controllers;
 
 import com.thiagodeas.todoapp.models.Task;
+import com.thiagodeas.todoapp.models.projection.TaskProjection;
 import com.thiagodeas.todoapp.services.TaskServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class TaskController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Task>> findAllByUser(){
-        List<Task> objs = this.taskServices.findAllByUser();
+    public ResponseEntity<List<TaskProjection>> findAllByUser(){
+        List<TaskProjection> objs = this.taskServices.findAllByUser();
         return ResponseEntity.ok().body(objs);
     }
 
