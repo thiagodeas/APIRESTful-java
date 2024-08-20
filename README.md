@@ -14,17 +14,19 @@ A API foi desenvolvida com o objetivo de fornecer um serviço backend robusto e 
 
 ## Tecnologias Utilizadas
 
-- Backend:
-- **Java 17**
-- **Spring Boot**
-- Database:
-- **MySQL**
-- Ferramentas:
-- **Intellij IDEA**
-- **JWT**
-- **Postman**
-- **Insomnia**
-- **Dbeaver**
-- **Maven**
-- **Git**
-- **Docker**
+- **Backend:**
+- Java 17
+- Spring Boot
+  
+- **Database:**
+- MySQL
+  
+- **Ferramentas:**
+- Intellij IDEA
+- JWT
+- Postman
+- Insomnia
+- Dbeaver
+- Maven
+- Git
+- Docker
