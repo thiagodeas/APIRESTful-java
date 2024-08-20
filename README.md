@@ -17,8 +17,10 @@ A API foi desenvolvida com o objetivo de fornecer um serviço backend robusto e 
  **Backend:**
 - Java 17
 - Spring Boot
+  
  **Database:**
 - MySQL
+  
  **Ferramentas:**
 - Intellij IDEA
 - JWT
