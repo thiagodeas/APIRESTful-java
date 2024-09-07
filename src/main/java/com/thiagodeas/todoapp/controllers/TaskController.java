@@ -4,7 +4,10 @@ import com.thiagodeas.todoapp.models.Task;
 import com.thiagodeas.todoapp.models.projection.TaskProjection;
 import com.thiagodeas.todoapp.services.TaskServices;
 
+import com.thiagodeas.todoapp.models.dto.TaskCreateDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,11 +40,18 @@ public class TaskController {
 
     @PostMapping
     @Validated
-    public ResponseEntity<Void> create(@Valid @RequestBody Task obj){
-        this.taskServices.create(obj);
+    public ResponseEntity<TaskCreateDTO> create(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
+        Task task = new Task();
+        task.setDescription(taskCreateDTO.getDescription());
+        Task createdTask = this.taskServices.create(task);
+
+        TaskCreateDTO responseDTO = new TaskCreateDTO();
+        responseDTO.setDescription(createdTask.getDescription());
+        responseDTO.setId(createdTask.getId());
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+                .path("/{id}").buildAndExpand(createdTask.getId()).toUri();
+        return ResponseEntity.created(uri).body(responseDTO);
     }
 
     @PutMapping("/{id}")
