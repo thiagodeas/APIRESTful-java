@@ -1,5 +1,6 @@
 package com.thiagodeas.todoapp.models;
 
+import com.thiagodeas.todoapp.models.enums.TaskPriorityEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,4 +28,8 @@ public class Task {
     @Size(min = 1, max = 255)
     @NotBlank
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority", nullable = false)
+    private TaskPriorityEnum priority;
 }

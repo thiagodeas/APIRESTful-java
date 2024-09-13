@@ -3,6 +3,7 @@ package com.thiagodeas.todoapp.services;
 import com.thiagodeas.todoapp.models.Task;
 import com.thiagodeas.todoapp.models.User;
 import com.thiagodeas.todoapp.models.enums.ProfileEnum;
+import com.thiagodeas.todoapp.models.enums.TaskPriorityEnum;
 import com.thiagodeas.todoapp.models.projection.TaskProjection;
 import com.thiagodeas.todoapp.repositories.TaskRepository;
 import com.thiagodeas.todoapp.security.UserSpringSecurity;
@@ -57,6 +58,11 @@ public class TaskServices {
         User user = this.userServices.findById(userSpringSecurity.getId());
         obj.setId(null);
         obj.setUser(user);
+
+        if(obj.getPriority() == null) {
+            obj.setPriority(TaskPriorityEnum.low);
+        }
+
         obj = this.taskRepository.save(obj);
         return obj;
     }
@@ -65,6 +71,9 @@ public class TaskServices {
     public Task update(Task obj) {
         Task newObj = findById(obj.getId());
         newObj.setDescription(obj.getDescription());
+        if(obj.getPriority() != null) {
+            newObj.setPriority(obj.getPriority());
+        }
         return this.taskRepository.save(newObj);
     }
 
