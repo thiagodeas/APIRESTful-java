@@ -43,10 +43,13 @@ public class TaskController {
     public ResponseEntity<TaskCreateDTO> create(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
         Task task = new Task();
         task.setDescription(taskCreateDTO.getDescription());
+        task.setPriority(taskCreateDTO.getPriority());
+
         Task createdTask = this.taskServices.create(task);
 
         TaskCreateDTO responseDTO = new TaskCreateDTO();
         responseDTO.setDescription(createdTask.getDescription());
+        responseDTO.setPriority(createdTask.getPriority());
         responseDTO.setId(createdTask.getId());
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -56,9 +59,14 @@ public class TaskController {
 
     @PutMapping("/{id}")
     @Validated
-    public ResponseEntity<Void> update(@Valid @RequestBody Task obj, @PathVariable Long id) {
-        obj.setId(id);
-        this.taskServices.update(obj);
+    public ResponseEntity<Void> update(@Valid @RequestBody TaskCreateDTO taskCreateDTO,
+                                       @PathVariable Long id) {
+        Task task = this.taskServices.findById(id);
+
+        task.setDescription(taskCreateDTO.getDescription());
+        task.setPriority(taskCreateDTO.getPriority());
+
+        this.taskServices.update(task);
         return ResponseEntity.noContent().build();
     }
 
